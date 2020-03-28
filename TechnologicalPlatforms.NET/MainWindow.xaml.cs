@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TechnologicalPlatforms.NET
+namespace Browser
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,6 +23,16 @@ namespace TechnologicalPlatforms.NET
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void MenuExitClick(object sender, RoutedEventArgs eventArgs)
+        {
+            this.Close();
+        }
+
+        private void MenuOpenClick(object sender, RoutedEventArgs eventArgs)
+        {
+
         }
     }
 }
