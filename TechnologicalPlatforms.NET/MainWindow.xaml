@@ -23,5 +23,13 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
+        <Grid>
+            
+        </Grid>
+        <StackPanel>
+            <TreeView Margin="10,10,0,13" x:Name="Tree" HorizontalAlignment="Left"  
+                    VerticalAlignment="Top" Width="390" Height="350" >
+            </TreeView>
+        </StackPanel>
     </DockPanel>
 </Window>
