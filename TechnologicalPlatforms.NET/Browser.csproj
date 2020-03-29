@@ -102,5 +102,14 @@
   <ItemGroup>
     <Resource Include="Resources\icons\Exit_16x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\NewFile_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\FolderOpened_grey_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\Trash_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
