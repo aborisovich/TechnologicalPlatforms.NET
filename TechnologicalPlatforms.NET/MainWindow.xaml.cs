@@ -51,6 +51,7 @@ namespace Browser
             Tree.Items.Add(rootItem);
             CreateTreeItemChildren(rootItem);
             rootItem.Expanded += OnExpanded;
+            rootItem.Selected += ContextMenuFolder;
         }
 
         /// <summary>
@@ -71,25 +72,29 @@ namespace Browser
             if (sender != args.OriginalSource)
                 return;
             ContextMenu = new ContextMenu();
-            List<MenuItem> menuItems = new List<MenuItem>()
+            MenuItem createFile = new MenuItem
             {
-                new MenuItem
-                {
-                    Header = "Create File",
-                    Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\NewFile_16x.png", UriKind.Relative)) } 
-                },
-                new MenuItem
-                {
-                    Header = "Create Folder",
-                    Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\FolderOpened_grey_16x.png", UriKind.Relative)) }
-                },
-                new MenuItem
-                {
-                    Header = "Delete Folder",
-                    Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\Trash_16x.png", UriKind.Relative)) }
-                }
+                Header = "Create File",
+                Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\NewFile_16x.png", UriKind.Relative)) }
             };
-            menuItems.ForEach(item => ContextMenu.Items.Add(item));
+            MenuItem createFolder = new MenuItem
+            {
+                Header = "Create Folder",
+                Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\FolderOpened_grey_16x.png", UriKind.Relative)) }
+            };
+            MenuItem deleteFolder = new MenuItem
+            {
+                Header = "Delete Folder",
+                Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\Trash_16x.png", UriKind.Relative)) },
+            };
+
+            createFile.Click += (s, a) => OnFileCreated(sender, args);
+            createFolder.Click += (s, a) => OnFolderCreated(sender, args);
+            deleteFolder.Click += (s, a) => OnFolderDeleted(sender, args);
+
+            ContextMenu.Items.Add(createFile);
+            ContextMenu.Items.Add(createFolder);
+            ContextMenu.Items.Add(deleteFolder);
         }
 
         protected virtual void ContextMenuFile(object sender, RoutedEventArgs args)
@@ -97,21 +102,69 @@ namespace Browser
             if (sender != args.OriginalSource)
                 return;
             ContextMenu = new ContextMenu();
-            List<MenuItem> menuItems = new List<MenuItem>()
+            MenuItem openFile = new MenuItem
             {
-                new MenuItem
-                {
-                    Header = "Open File",
-                    Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\OpenFile_16x.png", UriKind.Relative)) }
-                },
-                new MenuItem
-                {
-                    Header = "Delete File",
-                    Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\Trash_16x.png", UriKind.Relative)) }
-                }
+                Header = "Open File",
+                Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\OpenFile_16x.png", UriKind.Relative)) }
             };
-            menuItems.ForEach(item => ContextMenu.Items.Add(item));
+            MenuItem deleteFile = new MenuItem
+            {
+                Header = "Delete File",
+                Icon = new Image { Source = new BitmapImage(new Uri(@".\Resources\icons\Trash_16x.png", UriKind.Relative)) }
+            };
+
+            openFile.Click += (s, a) => OnFileOpened(sender, args);
+            deleteFile.Click += (s, a) => OnFileDeleted(sender, args);
+
+            ContextMenu.Items.Add(openFile);
+            ContextMenu.Items.Add(deleteFile);
         }
+
+        protected virtual void OnFileDeleted(object sender, RoutedEventArgs args)
+        {
+            if (sender != args.OriginalSource)
+                return;
+            ((sender as TreeViewItem).Parent as TreeViewItem).Items.Remove((sender as TreeViewItem));
+            filesystem.DeleteFile((sender as TreeViewItem).Tag.ToString());
+        }
+
+        protected virtual void OnFileOpened(object sender, RoutedEventArgs args)
+        {
+            if (sender != args.OriginalSource)
+                return;
+            TreeViewItem item = (sender as TreeViewItem);
+            using (var textReader = System.IO.File.OpenText(item.Tag.ToString()))
+            {
+                string text = textReader.ReadToEnd();
+                TextBlock.Text = text;
+            }
+        }
+
+        protected virtual void OnFileCreated(object sender, RoutedEventArgs args)
+        {
+            if (sender != args.OriginalSource)
+                return;
+        }
+
+        protected virtual void OnFolderCreated(object sender, RoutedEventArgs args)
+        {
+            if (sender != args.OriginalSource)
+                return;
+        }
+
+        protected virtual void OnFolderDeleted(object sender, RoutedEventArgs args)
+        {
+            if (sender != args.OriginalSource)
+                return;
+            TreeViewItem item = (sender as TreeViewItem);
+            if (item.Parent != null && item.Parent.GetType() != typeof(TreeView))
+                (item.Parent as TreeViewItem).Items.Remove(item);
+            else
+                Tree.Items.Remove(item);
+            filesystem.DeleteFolder((sender as TreeViewItem).Tag.ToString());
+        }
+
+
 
         /// <summary>
         /// Creates item children (files and folders) and registers child directories <see cref="TreeViewItem.Expanded"/> event.

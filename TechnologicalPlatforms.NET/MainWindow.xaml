@@ -23,10 +23,14 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <StackPanel>
-            <TreeView Margin="10,10,0,13" x:Name="Tree" HorizontalAlignment="Left"  
-                    VerticalAlignment="Top" Width="390" Height="350">
+        <ScrollViewer Margin="10,10,10,13" Width="380" Height="350"
+                      HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TreeView  x:Name="Tree">
             </TreeView>
-        </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer Margin="1,10,10,10" Height="350" Width="380" HorizontalAlignment="Right"
+                          VerticalAlignment="Top">
+            <TextBlock x:Name="TextBlock" Margin="20,20,20,20"/>
+        </ScrollViewer>
     </DockPanel>
 </Window>

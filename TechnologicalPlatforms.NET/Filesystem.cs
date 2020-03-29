@@ -29,5 +29,17 @@ namespace Browser
             DirectoryInfo directory = new DirectoryInfo(directoryPath);
             return directory.GetFiles("*", SearchOption.TopDirectoryOnly);
         }
+
+        public void DeleteFile(string filePath)
+        {
+            if(File.Exists(filePath))
+                File.Delete(filePath);
+        }
+
+        public void DeleteFolder(string directoryPath)
+        {
+            if (Directory.Exists(directoryPath))
+                Directory.Delete(directoryPath, true);
+        }
     }
 }
