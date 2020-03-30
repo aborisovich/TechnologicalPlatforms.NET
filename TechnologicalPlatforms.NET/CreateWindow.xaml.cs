@@ -57,22 +57,22 @@ namespace Browser
 
             if (FileSelection.IsChecked.Value)
             {
-                List<FileAttributes> attributes = new List<FileAttributes>();
+                FileAttributes attributes = FileAttributes.Normal;
                 AttributesCheckboxes.ForEach(checkbox =>
                 {
                     if (checkbox.IsChecked.Value)
-                        attributes.Add(FileAttributesMap[checkbox]);
+                        attributes |= FileAttributesMap[checkbox];
                 });
                 Filesystem.CreateFile(System.IO.Path.Combine(DirectoryPath, CreateWindowTextbox.Text), attributes);
                 Close();
             }
             else if (DirectorySelection.IsChecked.Value)
             {
-                List<FileAttributes> attributes = new List<FileAttributes>();
+                FileAttributes attributes = FileAttributes.Normal;
                 AttributesCheckboxes.ForEach(checkbox =>
                 {
                     if (checkbox.IsChecked.Value)
-                        attributes.Add(FileAttributesMap[checkbox]);
+                        attributes |= FileAttributesMap[checkbox];
                 });
                 Filesystem.CreateDirectory(System.IO.Path.Combine(DirectoryPath, CreateWindowTextbox.Text), attributes);
                 Close();

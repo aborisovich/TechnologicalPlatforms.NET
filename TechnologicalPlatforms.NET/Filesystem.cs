@@ -40,21 +40,56 @@ namespace Browser
         public void DeleteFolder(string directoryPath)
         {
             if (Directory.Exists(directoryPath))
+            {
+                // work-around for .NET failures to remove Read-Only folders
+                DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
+                directoryInfo.Attributes = FileAttributes.Normal;
+                foreach(var folder in directoryInfo.GetDirectories())
+                    folder.Attributes = FileAttributes.Normal;
+                foreach (var file in directoryInfo.GetFiles())
+                    file.Attributes = FileAttributes.Normal;
                 Directory.Delete(directoryPath, true);
+            }
+                
         }
 
-        public static void CreateFile(string filePath, List<FileAttributes> attributes)
+        public static void CreateFile(string filePath, FileAttributes attributes)
         {
             var stream = File.Create(filePath);
             stream.Close();
-            attributes.ForEach(attr => File.SetAttributes(filePath, attr));
+            new FileInfo(filePath).Attributes = attributes;
         }
 
-        public static void CreateDirectory(string directoryPath, List<FileAttributes> attributes)
+        public static void CreateDirectory(string directoryPath, FileAttributes attributes)
         {
             Directory.CreateDirectory(directoryPath);
-            DirectoryInfo directory = new DirectoryInfo(directoryPath);
-            attributes.ForEach(attr => directory.Attributes = attr);
+            new DirectoryInfo(directoryPath).Attributes = attributes;
+        }
+
+        public List<FileAttributes> GetFileAttributes(string filePath)
+        {
+            FileAttributes attributes = File.GetAttributes(filePath);
+            return AttributesToList(attributes);
+        }
+
+        public List<FileAttributes> GetFolderAttributes(string directoryPath)
+        {
+            FileAttributes attributes = new DirectoryInfo(directoryPath).Attributes;
+            return AttributesToList(attributes);
+        }
+
+        private List<FileAttributes> AttributesToList(FileAttributes attributes)
+        {
+            List<FileAttributes> attributeList = new List<FileAttributes>();
+            if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                attributeList.Add(FileAttributes.ReadOnly);
+            if ((attributes & FileAttributes.Archive) == FileAttributes.Archive)
+                attributeList.Add(FileAttributes.Archive);
+            if ((attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
+                attributeList.Add(FileAttributes.Hidden);
+            if ((attributes & FileAttributes.System) == FileAttributes.System)
+                attributeList.Add(FileAttributes.System);
+            return attributeList;
         }
     }
 }

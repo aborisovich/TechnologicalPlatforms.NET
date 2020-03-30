@@ -24,10 +24,19 @@ namespace Browser
     public partial class MainWindow : Window
     {
         private Filesystem filesystem;
+        private Dictionary<FileAttributes, string> AttributesSymbolMap { get; }
+        private const string browserAttrributesInfoPrefix = "Attributes: ";
 
         public MainWindow()
         {
             InitializeComponent();
+            AttributesSymbolMap = new Dictionary<FileAttributes, string>()
+            {
+                { FileAttributes.ReadOnly, "R" },
+                { FileAttributes.Archive, "A" },
+                { FileAttributes.Hidden, "H" },
+                { FileAttributes.System, "S" }
+            };
         }
 
         protected virtual void MenuExitClick(object sender, RoutedEventArgs eventArgs)
@@ -121,6 +130,32 @@ namespace Browser
 
             ContextMenu.Items.Add(openFile);
             ContextMenu.Items.Add(deleteFile);
+        }
+
+        protected virtual void ShowFileAttributes(object sender, RoutedEventArgs args)
+        {
+            if (sender != args.OriginalSource)
+                return;
+            TreeViewItem item = (sender as TreeViewItem);
+            BrowserAttrributesInfo.Clear();
+            BrowserAttrributesInfo.Text = browserAttrributesInfoPrefix;
+            foreach (var attribute in filesystem.GetFileAttributes(item.Tag.ToString()))
+            {
+                BrowserAttrributesInfo.Text += AttributesSymbolMap[attribute];
+            }
+        }
+
+        protected virtual void ShowFolderAttributes(object sender, RoutedEventArgs args)
+        {
+            if (sender != args.OriginalSource)
+                return;
+            TreeViewItem item = (sender as TreeViewItem);
+            BrowserAttrributesInfo.Clear();
+            BrowserAttrributesInfo.Text = browserAttrributesInfoPrefix;
+            foreach (var attribute in filesystem.GetFolderAttributes(item.Tag.ToString()))
+            {
+                BrowserAttrributesInfo.Text += AttributesSymbolMap[attribute];
+            }
         }
 
         protected virtual void OnFileDeleted(object sender, RoutedEventArgs args)
@@ -239,6 +274,7 @@ namespace Browser
                 };
                 item.Expanded += OnExpanded;
                 item.Selected += ContextMenuFolder;
+                item.Selected += ShowFolderAttributes;
                 parent.Items.Add(item);
             }
 
@@ -250,6 +286,7 @@ namespace Browser
                     Tag = file.FullName
                 };
                 item.Selected += ContextMenuFile;
+                item.Selected += ShowFileAttributes;
                 parent.Items.Add(item);
             }
         }

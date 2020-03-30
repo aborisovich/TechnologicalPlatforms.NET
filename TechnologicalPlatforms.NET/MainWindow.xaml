@@ -5,32 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Browser"
         mc:Ignorable="d"
-        Title="Browser" Height="450" Width="800">
-    <DockPanel>
-        <Menu Name="AppMenu" DockPanel.Dock="Top">
+        Title="Browser" Height="500" Width="800">
+    <StackPanel>
+        <Menu Name="AppMenu" VerticalAlignment="Top">
             <MenuItem Header="_File">
                 <MenuItem x:Name="MenuOpen" Header="_Open"
-                          InputGestureText="Ctrl+O" Click="MenuOpenClick">
+                              InputGestureText="Ctrl+O" Click="MenuOpenClick">
                     <MenuItem.Icon>
                         <Image Source=".\Resources\icons\OpenFile_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem x:Name="MenuExit" Header="_Exit"
-                          InputGestureText="Ctrl+X" Click="MenuExitClick">
+                              InputGestureText="Ctrl+X" Click="MenuExitClick">
                     <MenuItem.Icon>
                         <Image Source=".\Resources\icons\Exit_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <ScrollViewer Margin="10,10,10,13" Width="380" Height="350"
-                      HorizontalAlignment="Left" VerticalAlignment="Top">
-            <TreeView  x:Name="Tree">
-            </TreeView>
-        </ScrollViewer>
-        <ScrollViewer Margin="1,10,10,10" Height="350" Width="380" HorizontalAlignment="Right"
-                          VerticalAlignment="Top">
-            <TextBlock x:Name="TextBlock" Margin="20,20,20,20"/>
-        </ScrollViewer>
-    </DockPanel>
+        <Grid Height="450">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0" Margin="20,20,20,20" Width="360" Height="350"
+                          HorizontalAlignment="Right" VerticalAlignment="Top">
+                <TreeView  x:Name="Tree" Margin="10,0,10,0">
+                </TreeView>
+            </ScrollViewer>
+            <ScrollViewer Grid.Column="1" Margin="20,20,20,20" Height="350" Width="360" HorizontalAlignment="Left"
+                              VerticalAlignment="Top">
+                <TextBlock x:Name="TextBlock" Margin="20,0,20,0"/>
+            </ScrollViewer>
+            <StatusBar Grid.Column="0" Height="40" VerticalAlignment="Bottom"
+                       Margin="20,20,40,30">
+                <TextBox x:Name="BrowserAttrributesInfo" Text="Attributes:" Width="320"
+                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5, 5, 5, 5"/>
+            </StatusBar>
+        </Grid>
+    </StackPanel>
 </Window>
