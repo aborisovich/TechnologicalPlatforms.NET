@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Browser
 {
@@ -40,6 +41,20 @@ namespace Browser
         {
             if (Directory.Exists(directoryPath))
                 Directory.Delete(directoryPath, true);
+        }
+
+        public static void CreateFile(string filePath, List<FileAttributes> attributes)
+        {
+            var stream = File.Create(filePath);
+            stream.Close();
+            attributes.ForEach(attr => File.SetAttributes(filePath, attr));
+        }
+
+        public static void CreateDirectory(string directoryPath, List<FileAttributes> attributes)
+        {
+            Directory.CreateDirectory(directoryPath);
+            DirectoryInfo directory = new DirectoryInfo(directoryPath);
+            attributes.ForEach(attr => directory.Attributes = attr);
         }
     }
 }

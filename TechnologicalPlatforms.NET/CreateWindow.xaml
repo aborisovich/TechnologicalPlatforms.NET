@@ -12,7 +12,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Label Content="Name" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="20" Margin="40,4,0,0" TextWrapping="Wrap" Text="Enter name" VerticalAlignment="Top" Width="339" UndoLimit="250"/>
+        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="20" Margin="40,4,0,0" TextWrapping="Wrap" Text="Enter name" VerticalAlignment="Top" Width="339" UndoLimit="250"
+                 x:Name="CreateWindowTextbox"/>
         <RadioButton Content="File" HorizontalAlignment="Left" Margin="40,40,0,0" VerticalAlignment="Top" ClickMode="Press"
                      x:Name="FileSelection" GroupName="CreateType"/>
         <RadioButton Content="Directory" HorizontalAlignment="Left" Margin="40,60,0,0" VerticalAlignment="Top" ClickMode="Press"
@@ -26,9 +27,9 @@
         <CheckBox Content="System" HorizontalAlignment="Left" Margin="40,160,0,0" VerticalAlignment="Top" ClickMode="Press"
                   x:Name="SystemCheckbox"/>
         <Button Content="Ok" HorizontalAlignment="Right" Margin="0,200,20,0" VerticalAlignment="Top" Width="75"
-                x:Name="CreateConfirmButton"/>
+                x:Name="CreateConfirmButton" Click="OnConfirmButtonClick"/>
         <Button Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="20,200,0,0" VerticalAlignment="Top" Width="75"
-                x:Name="CreateCancelButton"/>
+                x:Name="CreateCancelButton" Click="OnCancelButtonClick"/>
 
 
     </Grid>

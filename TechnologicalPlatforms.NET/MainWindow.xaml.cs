@@ -40,6 +40,9 @@ namespace Browser
             System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog()
                 { Description = "Select directory to open" };
             folderDialog.ShowDialog();
+            if (string.IsNullOrEmpty(folderDialog.SelectedPath))
+                return;
+            Tree.Items.Clear();
             filesystem = new Filesystem(folderDialog.SelectedPath);
 
             var rootItem = new TreeViewItem
@@ -124,8 +127,20 @@ namespace Browser
         {
             if (sender != args.OriginalSource)
                 return;
-            ((sender as TreeViewItem).Parent as TreeViewItem).Items.Remove((sender as TreeViewItem));
-            filesystem.DeleteFile((sender as TreeViewItem).Tag.ToString());
+            
+            try
+            {
+                filesystem.DeleteFile((sender as TreeViewItem).Tag.ToString());
+                ((sender as TreeViewItem).Parent as TreeViewItem).Items.Remove((sender as TreeViewItem));
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Failed to delete file, insufficient permissions.", "Failed to delete file", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show(e.Message, "Failed to delete file", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         protected virtual void OnFileOpened(object sender, RoutedEventArgs args)
@@ -144,12 +159,27 @@ namespace Browser
         {
             if (sender != args.OriginalSource)
                 return;
+            TreeViewItem item = (sender as TreeViewItem);
+            CreateWindow createWindow = new CreateWindow(item.Tag.ToString());
+            createWindow.Show();
+            createWindow.Closed += (s, a) => OnCreateWindowClosed(sender, args);
+        }
+
+        protected virtual void OnCreateWindowClosed(object sender, EventArgs e)
+        {            
+            TreeViewItem item = (sender as TreeViewItem);
+            item.Items.Clear();
+            CreateTreeItemChildren(item);
         }
 
         protected virtual void OnFolderCreated(object sender, RoutedEventArgs args)
         {
             if (sender != args.OriginalSource)
                 return;
+            TreeViewItem item = (sender as TreeViewItem);
+            CreateWindow createWindow = new CreateWindow(item.Tag.ToString());
+            createWindow.Show();
+            createWindow.Closed += (s, a) => OnCreateWindowClosed(sender, args);
         }
 
         protected virtual void OnFolderDeleted(object sender, RoutedEventArgs args)
@@ -158,13 +188,38 @@ namespace Browser
                 return;
             TreeViewItem item = (sender as TreeViewItem);
             if (item.Parent != null && item.Parent.GetType() != typeof(TreeView))
-                (item.Parent as TreeViewItem).Items.Remove(item);
+            {
+                try
+                {
+                    filesystem.DeleteFolder(item.Tag.ToString());
+                    (item.Parent as TreeViewItem).Items.Remove(item);
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    MessageBox.Show("Failed to delete folder, insufficient permissions.", "Failed to delete directory", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch(IOException e)
+                {
+                    MessageBox.Show(e.Message, "Failed to delete directory", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }   
             else
-                Tree.Items.Remove(item);
-            filesystem.DeleteFolder((sender as TreeViewItem).Tag.ToString());
+            {
+                try
+                {
+                    filesystem.DeleteFolder((sender as TreeViewItem).Tag.ToString());
+                    Tree.Items.Clear();
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    MessageBox.Show("Failed to delete folder, insufficient permissions.", "Failed to delete directory", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (IOException e)
+                {
+                    MessageBox.Show(e.Message, "Failed to delete directory", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
-
-
 
         /// <summary>
         /// Creates item children (files and folders) and registers child directories <see cref="TreeViewItem.Expanded"/> event.
