@@ -1,0 +1,35 @@
+﻿<Window x:Class="Browser.CreateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Browser"
+        mc:Ignorable="d"
+        Title="Create" Height="300" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="Name" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="20" Margin="40,4,0,0" TextWrapping="Wrap" Text="Enter name" VerticalAlignment="Top" Width="339" UndoLimit="250"/>
+        <RadioButton Content="File" HorizontalAlignment="Left" Margin="40,40,0,0" VerticalAlignment="Top" ClickMode="Press"
+                     x:Name="FileSelection" GroupName="CreateType"/>
+        <RadioButton Content="Directory" HorizontalAlignment="Left" Margin="40,60,0,0" VerticalAlignment="Top" ClickMode="Press"
+                     x:Name="DirectorySelection" GroupName="CreateType"/>
+        <CheckBox Content="ReadOnly" HorizontalAlignment="Left" Margin="40,100,0,0" VerticalAlignment="Top" ClickMode="Press"
+                  x:Name="ReadOnlyCheckbox"/>
+        <CheckBox Content="Archive" HorizontalAlignment="Left" Margin="40,120,0,0" VerticalAlignment="Top" ClickMode="Press"
+                  x:Name="ArchiveCheckbox"/>
+        <CheckBox Content="Hidden" HorizontalAlignment="Left" Margin="40,140,0,0" VerticalAlignment="Top" ClickMode="Press"
+                  x:Name="HiddenCheckbox"/>
+        <CheckBox Content="System" HorizontalAlignment="Left" Margin="40,160,0,0" VerticalAlignment="Top" ClickMode="Press"
+                  x:Name="SystemCheckbox"/>
+        <Button Content="Ok" HorizontalAlignment="Right" Margin="0,200,20,0" VerticalAlignment="Top" Width="75"
+                x:Name="CreateConfirmButton"/>
+        <Button Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="20,200,0,0" VerticalAlignment="Top" Width="75"
+                x:Name="CreateCancelButton"/>
+
+
+    </Grid>
+</Window>
