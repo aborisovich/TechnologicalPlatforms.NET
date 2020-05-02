@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:Lab2"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <Grid ClipToBounds="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="184*"/>
+            <ColumnDefinition Width="215*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid ItemsSource="{Binding Orders}" SelectionChanged="DataGrid_SelectionChanged"/>
+        <local:OrderDetails Grid.Column="1" DataContext="{Binding}"/>
+        </Grid>
 </Window>
